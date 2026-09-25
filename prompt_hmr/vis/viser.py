@@ -6,7 +6,6 @@ import torch
 from tqdm import tqdm
 import numpy as np
 import viser
-import viser.extras
 import viser.transforms as vtf
 from scipy.spatial.transform import Rotation as R
 
@@ -57,7 +56,8 @@ def add_camera_frustm(image, server, quat, trans):
 
 
 def viser_vis_human(vertices: torch.Tensor, faces: torch.Tensor, 
-                    image=None, cameras=None, floor=None, block=True, track_id=None):
+                    image=None, cameras=None, floor=None, block=True, track_id=None,
+                    server=None):
     
     if type(vertices) is torch.Tensor:
         vertices = vertices.cpu().numpy()
@@ -71,9 +71,7 @@ def viser_vis_human(vertices: torch.Tensor, faces: torch.Tensor,
     else:
         human_idx = [i for i in human_vertices]
 
-    try:
-        server.scene.reset()
-    except NameError:
+    if server is None:
         server = viser.ViserServer()
 
     server.scene.world_axes.visible = True
